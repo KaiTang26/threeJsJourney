@@ -17,7 +17,8 @@ class TextureMap extends Map {
       for (let i = 0; i < 6; i++) {
         this.mats[i] = new THREE.ShaderMaterial({
           uniforms: {
-            index: {type: "i", value: i}
+            index: {type: "i", value: i},
+            seed: {type: "f", value: 0.785}
           },
           vertexShader: vertShader,
           fragmentShader: fragShader,

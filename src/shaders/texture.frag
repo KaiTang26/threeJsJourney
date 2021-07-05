@@ -1,11 +1,12 @@
 varying vec2 vUv;
 uniform int index;
+uniform float seed;
 		int mod(int x, int m) {
 			return int(mod(float(x), float(m)));
 		}
 		
 		float random5(vec3 co) {
-			return fract(sin(dot(co.xyz ,vec3(12.9898,78.233,1.23456))) * 43758.5453);
+			return fract(sin(dot(co.xyz ,vec3(12.9898,78.233,1.23456))*seed) * 43758.5453);
 		}
 		
 		
@@ -71,7 +72,7 @@ uniform int index;
 			float level5 = helper(x, y, z, resolution5);
 			float levelMax = helper(x, y, z, resolutionMax);
 			
-			float c = 0.5;
+			float c = 0.6;
 			c *= 1.0 + level1*0.8;
 			c *= 1.0 + level2*0.4;
 			c *= 1.0 + level3*0.2;
