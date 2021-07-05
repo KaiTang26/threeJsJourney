@@ -3,6 +3,43 @@ import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 
+
+const loadingManager = new THREE.LoadingManager();
+
+
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const px = textureLoader.load('0/px.jpg');
+const nx = textureLoader.load('0/nx.jpg');
+const py = textureLoader.load('0/py.jpg');
+const ny = textureLoader.load('0/ny.jpg');
+const pz = textureLoader.load('0/pz.jpg');
+const nz = textureLoader.load('0/nz.jpg');
+
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const envTexture = cubeTextureLoader.load([
+    '0/px.jpg',
+    '0/nx.jpg',
+    '0/py.jpg',
+    '0/ny.jpg',
+    '0/pz.jpg',
+    '0/nz.jpg',
+])
+
+
+
+
+// const image = new Image();
+// const texture = new THREE.Texture(image);
+// image.onload=()=>{
+
+//     texture.needsUpdate = true;
+//     console.log(texture)
+// }
+
+// image.src = '/door.jpg'
+
+
 // debug
 const gui = new dat.GUI();
 
@@ -26,30 +63,42 @@ const canvas= document.querySelector('canvas.webgl')
 // Object
 let geometry = new THREE.BoxBufferGeometry(1, 1, 1, 64, 64, 64);
 
-const position = geometry.attributes.position;
 
+
+const position = geometry.attributes.position;
 geometry.morphAttributes.position = [];
 const spherePositions = [];
 let v3 = new THREE.Vector3();
 
-console.log( position );
-
-console.log(position.count);
-
 for (var i = 0; i < position.count; i++) {
-    //v3.fromBufferAttribute(position, i).setLength((3.5 * Math.sqrt(3) + 3.5) * 0.5);
     v3.fromBufferAttribute(position, i).normalize().multiplyScalar(1);
     spherePositions.push(v3.x, v3.y, v3.z);
-  }
+}
 
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(spherePositions, 3))
-
-
+geometry.setAttribute('position', new THREE.Float32BufferAttribute(spherePositions, 3))
 
 
 
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
+
+
+const material = new THREE.MeshStandardMaterial();
+material.metalness = 1
+material.roughness = 0.0
+material.map = envTexture
+
+
+const materials = [
+    new THREE.MeshBasicMaterial({map:px}),
+    new THREE.MeshBasicMaterial({map:nx}),
+    new THREE.MeshBasicMaterial({map:py}),
+    new THREE.MeshBasicMaterial({map:ny}),
+    new THREE.MeshBasicMaterial({map:pz}),
+    new THREE.MeshBasicMaterial({map:nz})
+
+
+]
+
+const mesh = new THREE.Mesh(geometry, materials)
 
 
 
@@ -61,7 +110,7 @@ gui.add(mesh.position, 'y', -3, 3, 0.01);
 gui.add(mesh.position, 'x', -3, 3, 0.01);
 gui.add(mesh.position, 'z', -3, 3, 0.01);
 
-gui.add(mesh.material, 'wireframe');
+//gui.add(mesh.material, 'wireframe');
 
 const axesHelper = new THREE.AxesHelper();
 scene.add(axesHelper);
