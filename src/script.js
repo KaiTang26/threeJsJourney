@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
+import TextureMap from './TexureMap.js';
 
 
 const loadingManager = new THREE.LoadingManager();
@@ -9,12 +10,12 @@ const loadingManager = new THREE.LoadingManager();
 
 
 const textureLoader = new THREE.TextureLoader(loadingManager);
-const px = textureLoader.load('0/px.jpg');
-const nx = textureLoader.load('0/nx.jpg');
-const py = textureLoader.load('0/py.jpg');
-const ny = textureLoader.load('0/ny.jpg');
-const pz = textureLoader.load('0/pz.jpg');
-const nz = textureLoader.load('0/nz.jpg');
+const px = textureLoader.load('1/px.jpg');
+const nx = textureLoader.load('1/nx.jpg');
+const py = textureLoader.load('1/py.jpg');
+const ny = textureLoader.load('1/ny.jpg');
+const pz = textureLoader.load('1/pz.jpg');
+const nz = textureLoader.load('1/nz.jpg');
 
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 const envTexture = cubeTextureLoader.load([
@@ -98,11 +99,26 @@ const materials = [
 
 ]
 
-const mesh = new THREE.Mesh(geometry, materials)
+const newMaterials = [];
+const textureMap = new TextureMap();
+
+for(let i=0; i<6; i++){
+	// let material = new THREE.MeshBasicMaterial({
+    //     color: new THREE.Color(0xFFFFFF),
+	// 	map: textureMap.maps[i]
+    // });
+	newMaterials[i] = textureMap.mats[i]
+	//newMaterials[i].map = textureMap.maps[i];
+}
 
 
 
-//mesh.position.set(0.7, -0.6, 1);
+
+console.log('textureMap: ', textureMap);
+
+const mesh = new THREE.Mesh(geometry, newMaterials)
+
+//const mesh = new THREE.Mesh(textureMap.geos[0], textureMap.mats[0])
 
 scene.add(mesh)
 //debug
@@ -181,3 +197,9 @@ const tick = ()=>{
 }
 
 tick();
+
+
+
+
+
+
